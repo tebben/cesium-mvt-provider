@@ -145,7 +145,8 @@ MvtImageryProvider.prototype.getTileCredits = function (x, y, level) {
 	return undefined;
 };
 
-function renderPolygonClassified(context, geoms, properties, style) {
+function renderPolygonClassified(context, geoms, properties, extent, style, tileWidth) {
+	const div = extent / tileWidth;
 	context.fillStyle = properties.color;
 
 	if(style) {
@@ -164,10 +165,13 @@ function renderPolygonClassified(context, geoms, properties, style) {
 			let coords = rings[j];
 
 			for (let k = 0; k < coords.length; k++) {
+				const x = coords[k].x / div;
+				const y = coords[k].y / div;
+
 				if (k === 0) {
-					context.moveTo(coords[k].x, coords[k].y);
+					context.moveTo(x, y);
 				} else {
-					context.lineTo(coords[k].x, coords[k].y);
+					context.lineTo(x, y);
 				}
 			}
 		}
@@ -210,11 +214,13 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 
 	//if (x !== 67465 || y !== 43476 || level !== 17) {
 		//if (x === 67465 && y === 43476 && level === 17) {
-		const canvas = document.createElement('canvas');
-		canvas.width = 4096;
-		canvas.height = 4096;
-		const context = canvas.getContext('2d');
-		if (!context) return;
+			const canvas = document.createElement('canvas');
+			/* canvas.width = 4096;
+			canvas.height = 4096; */
+			canvas.width = this._tileWidth;
+			canvas.height = this._tileHeight;
+			const context = canvas.getContext('2d');
+			if (!context) return;
 
 		const response = await fetch(
 			this.url
@@ -236,7 +242,7 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 					const geom = feature.loadGeometry();
 					//renderPolygon(context, geom, feature.properties);
 					const classified = feature.classifyRings(geom);
-					renderPolygonClassified(context, classified, feature.properties, this.style);
+					renderPolygonClassified(context, classified, feature.properties, layer.extent, this.style, this._tileWidth);
 				} else {
 					console.log(type);
 				}

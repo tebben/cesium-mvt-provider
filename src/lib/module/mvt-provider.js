@@ -8,7 +8,7 @@ import PBF from "pbf";
  *
  * Initialization options for the TileCoordinatesImageryProvider constructor
  *
- * @property {TilingScheme} [tilingScheme=new GeographicTilingScheme()] The tiling scheme for which to draw tiles.
+ * @property {TilingScheme} [tilingScheme=new WebMercatorTilingScheme()] The tiling scheme for which to draw tiles.
  * @property {Ellipsoid} [ellipsoid] The ellipsoid.  If the tilingScheme is specified,
  *                    this parameter is ignored and the tiling scheme's ellipsoid is used instead. If neither
  *                    parameter is specified, the WGS84 ellipsoid is used.
