@@ -3,13 +3,10 @@ import {
 	defaultValue,
 	defined,
 	Event,
-	GeographicTilingScheme,
 	Ellipsoid,
-	TextureMagnificationFilter,
-	TextureMinificationFilter,
+	WebMercatorTilingScheme,
 	TilingScheme
 } from 'cesium';
-import WebMercatorTilingScheme from 'cesium/Source/Core/WebMercatorTilingScheme';
 
 // @ts-ignore
 import PBF from 'pbf';
@@ -20,7 +17,7 @@ import { VectorTile } from '$lib/module/vector-tile/vector-tile';
  *
  * Initialization options for the TileCoordinatesImageryProvider constructor
  *
- * @property {TilingScheme} [tilingScheme=new GeographicTilingScheme()] The tiling scheme for which to draw tiles.
+ * @property {TilingScheme} [tilingScheme=new WebMercatorTilingScheme()] The tiling scheme for which to draw tiles.
  * @property {Ellipsoid} [ellipsoid] The ellipsoid.  If the tilingScheme is specified,
  *                    this parameter is ignored and the tiling scheme's ellipsoid is used instead. If neither
  *                    parameter is specified, the WGS84 ellipsoid is used.
