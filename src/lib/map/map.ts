@@ -31,9 +31,9 @@ export class Map {
 	}
 
 	private addDefault() {
-		const lufoConfig = new Wmtsconfig({ background: true, contentType: "image/png", featureName: "2021_orthoHR", url: "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0?request=GetCapabilities&service=wmts" });
-		const wmtsLayer = new WmtsLayer(this, lufoConfig);
-		this.addLayer(wmtsLayer);
+		//const lufoConfig = new Wmtsconfig({ background: true, contentType: "image/png", featureName: "2021_orthoHR", url: "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0?request=GetCapabilities&service=wmts" });
+		//const wmtsLayer = new WmtsLayer(this, lufoConfig);
+		//this.addLayer(wmtsLayer);
 
 		this.addLayer(new TestLayer(this));
 	}
@@ -50,11 +50,11 @@ export class Map {
 
 		if (!this.startPosition) {
 			this.startPosition = new CameraLocation(
-				6.599192,
-				53.298561,
-				412.5886013073694,
-				329,
-				-29.189434822434666,
+				5.30007,
+				51.69126,
+				383.68474,
+				0,
+				-90,
 				0
 			);
 		}
@@ -146,9 +146,7 @@ export class Map {
 		viewer.clock.shouldAnimate = false;
 		viewer.scene.debugShowFramesPerSecond = false;
 
-		if (addDefaultBaselayer === false) {
-			viewer.imageryLayers.removeAll();
-		}
+		viewer.imageryLayers.removeAll();
 
 		// shadow settings
 		viewer.shadows = false;

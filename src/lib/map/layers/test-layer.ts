@@ -1,8 +1,6 @@
-import * as Cesium from "cesium";
-import { MvtLayer } from "$lib/module/mvt-layer";
-import { MvtProvider } from "$lib/module/mvt-provider";
-
 import type { Map } from "$lib/map/map";
+import MvtProvider from "$lib/module/mvt-provider";
+import ImageryLayer from "cesium/Source/Scene/ImageryLayer";
 
 export class TestLayer {
     private map: Map;
@@ -14,10 +12,9 @@ export class TestLayer {
 
     public addToMap(): void {
         const mvtProvider = new MvtProvider();
-        console.log("mvt provider created");
+        //console.log("mvt provider created");
 
-        const layer = new MvtLayer(mvtProvider);
-
-        this.map.viewer.imageryLayers.add(layer);
+        //const layer = new ImageryLayer(mvtProvider);
+        this.map.viewer.imageryLayers.addImageryProvider(mvtProvider);
     }
 }
