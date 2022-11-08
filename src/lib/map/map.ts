@@ -31,9 +31,9 @@ export class Map {
 	}
 
 	private addDefault() {
-		const lufoConfig = new Wmtsconfig({ background: true, contentType: "image/png", featureName: "2021_orthoHR", url: "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0?request=GetCapabilities&service=wmts" });
-		const wmtsLayer = new WmtsLayer(this, lufoConfig);
-		this.addLayer(wmtsLayer);
+		//const lufoConfig = new Wmtsconfig({ background: true, contentType: "image/png", featureName: "2021_orthoHR", url: "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0?request=GetCapabilities&service=wmts" });
+		//const wmtsLayer = new WmtsLayer(this, lufoConfig);
+		//this.addLayer(wmtsLayer);
 
 		this.addLayer(new TestLayer(this));
 	}
@@ -52,7 +52,8 @@ export class Map {
 			this.startPosition = new CameraLocation(
 				5.30007,
 				51.69126,
-				383.68474,
+				//383.68474,
+				3500,
 				0,
 				-90,
 				0

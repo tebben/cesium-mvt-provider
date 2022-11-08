@@ -85,7 +85,13 @@ export class VectorTileFeature {
             } else if (cmd === 7) {
                 // Workaround for https://github.com/mapbox/mapnik-vector-tile/issues/90                
                 if (line) {
-                    line.push(new Point(line[0].x, line[1].y)); // closePolygon
+                    if(line[0].x != line[line.length - 1].x || line[0].y != line[line.length - 1].y){
+                        line.push(structuredClone(line[0]));
+                    } else {
+                        console.log("same");
+                    }
+                    
+                    //line.push(new Point(line[0].x, line[1].y)); // closePolygon
                 }
             } else {                
                 throw new Error('unknown command ' + cmd);
@@ -97,19 +103,9 @@ export class VectorTileFeature {
         return lines;
     }
 
-/*     getGeometryType(type, numEnds) {
-        let geometryType;
-        if (type === 1) {
-            geometryType = numEnds === 1 ? 'Point' : 'MultiPoint';
-        } else if (type === 2) {
-            geometryType = numEnds === 1 ? 'LineString' : 'MultiLineString';
-        } else if (type === 3) {
-            geometryType = 'Polygon';
-            // MultiPolygon not relevant for rendering - winding order determines
-            // outer rings of polygons.
-        }
-        return geometryType;
-    } */
+    // 1 = point
+    // 2 = linestring
+    // 3 = polygon
 
     get bbox(): Array<number> {
         var pbf = this.pbf;

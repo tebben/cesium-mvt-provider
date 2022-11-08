@@ -39,9 +39,10 @@ import { VectorTile } from '$lib/module/vector-tile/vector-tile';
  *
  * @param {MvtImageryProvider.ConstructorOptions} [options] Object describing initialization options
  */
-function MvtImageryProvider(url, options) {
+function MvtImageryProvider(url, style, options) {
 	options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 	this.url = url;
+	this.style = style;
 	this._tilingScheme = defined(options.tilingScheme)
 		? options.tilingScheme
 		: new WebMercatorTilingScheme({ ellipsoid: options.ellipsoid });
@@ -147,17 +148,24 @@ MvtImageryProvider.prototype.getTileCredits = function (x, y, level) {
 	return undefined;
 };
 
-function renderPolygon(context, geoms, properties) {
+function renderPolygonClassified(context, geoms, properties, style) {
 	context.fillStyle = properties.color;
-	
+
+	if(style) {
+		context.fillStyle = style.getFill(properties[style.fillProperty]);
+	}
 
 	for (let i = 0; i < geoms.length; i++) {
 		const rings = geoms[i];
-		context.beginPath();
 
+		
 		for (let j = 0; j < rings.length; j++) {
+			if (j === 0) {
+				context.beginPath();
+			}
+	
 			let coords = rings[j];
-			
+
 			for (let k = 0; k < coords.length; k++) {
 				if (k === 0) {
 					context.moveTo(coords[k].x, coords[k].y);
@@ -165,19 +173,46 @@ function renderPolygon(context, geoms, properties) {
 					context.lineTo(coords[k].x, coords[k].y);
 				}
 			}
-
-			context.closePath();
 		}
 
-		context.fill();
+		context.closePath();
+		context.fill("evenodd");
+	}
+}
+
+function renderPolygon(context, geoms, properties) {
+	context.fillStyle = properties.color;
+
+
+	context.beginPath();
+
+	for (let i = 0; i < geoms.length; i++) {
+		const coords = geoms[i];
+
+
+		for (let k = 0; k < coords.length; k++) {
+			if (k === 0) {
+				context.moveTo(coords[k].x, coords[k].y);
+			} else {
+				context.lineTo(coords[k].x, coords[k].y);
+			}
+
+			if (k === coords.length - 1 && coords[0].y !== coords[k].y) {
+				context.lineTo(coords[0].x, coords[0].y);
+				//console.log(coords[0].y, coords[k].y);
+			}
+		}
+
+		context.closePath();
+		context.fill("evenodd");
 	}
 }
 
 MvtImageryProvider.prototype.requestImage = async function (x, y, level, request) {
 	const cssColor = this._color.toCssColorString();
 
-	//if (x !== 67465 || y !== 43476 || level !== 17) {
-	if (x === 67465 && y === 43476 && level === 17) {
+	if (x !== 67465 || y !== 43476 || level !== 17) {
+		//if (x === 67465 && y === 43476 && level === 17) {
 		const canvas = document.createElement('canvas');
 		canvas.width = 4096;
 		canvas.height = 4096;
@@ -199,15 +234,16 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 			for (let j = 0; j < layer.amountOfFeatures; j++) {
 				const feature = layer.getFeature(j);
 				const type = feature.type;
-	
+
 				if (type === 3) {
 					const geom = feature.loadGeometry();
+					//renderPolygon(context, geom, feature.properties);
 					const classified = feature.classifyRings(geom);
-					renderPolygon(context, classified, feature.properties);
+					renderPolygonClassified(context, classified, feature.properties, this.style);
 				} else {
 					console.log(type);
 				}
-			}	
+			}
 		}
 
 		return Promise.resolve(canvas);
@@ -230,7 +266,7 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 		context.fillText(`Y: ${y}`, 124, 186);
 
 		return Promise.resolve(canvas);
-	} 
+	}
 };
 
 MvtImageryProvider.prototype.pickFeatures = function (x, y, level, longitude, latitude) {
