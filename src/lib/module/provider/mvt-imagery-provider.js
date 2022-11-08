@@ -206,9 +206,9 @@ function renderPolygon(context, geoms, properties) {
 }
 
 MvtImageryProvider.prototype.requestImage = async function (x, y, level, request) {
-	const cssColor = this._color.toCssColorString();
+	//const cssColor = this._color.toCssColorString();
 
-	if (x !== 67465 || y !== 43476 || level !== 17) {
+	//if (x !== 67465 || y !== 43476 || level !== 17) {
 		//if (x === 67465 && y === 43476 && level === 17) {
 		const canvas = document.createElement('canvas');
 		canvas.width = 4096;
@@ -244,7 +244,7 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 		}
 
 		return Promise.resolve(canvas);
-	} else {
+	/* } else {
 		const canvas = document.createElement('canvas');
 		canvas.width = 256;
 		canvas.height = 256;
@@ -263,7 +263,7 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 		context.fillText(`Y: ${y}`, 124, 186);
 
 		return Promise.resolve(canvas);
-	}
+	} */
 };
 
 MvtImageryProvider.prototype.pickFeatures = function (x, y, level, longitude, latitude) {
