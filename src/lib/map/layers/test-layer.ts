@@ -1,6 +1,6 @@
 import type { Map } from "$lib/map/map";
-import MvtProvider from "$lib/module/mvt-provider";
-import ImageryLayer from "cesium/Source/Scene/ImageryLayer";
+
+import MvtImageryProvider from "$lib/module/provider/mvt-imagery-provider";
 
 export class TestLayer {
     private map: Map;
@@ -11,10 +11,7 @@ export class TestLayer {
     }
 
     public addToMap(): void {
-        const mvtProvider = new MvtProvider();
-        //console.log("mvt provider created");
-
-        //const layer = new ImageryLayer(mvtProvider);
+        const mvtProvider = new MvtImageryProvider('https://services.beta.geodan.nl/cache/tileserv/basiskaart.getmvt/{z}/{x}/{y}.pbf');
         this.map.viewer.imageryLayers.addImageryProvider(mvtProvider);
     }
 }
