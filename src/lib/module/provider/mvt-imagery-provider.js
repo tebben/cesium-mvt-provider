@@ -145,7 +145,7 @@ MvtImageryProvider.prototype.getTileCredits = function (x, y, level) {
 	return undefined;
 };
 
-function renderPolygonClassified(context, geoms, properties, extent, style, tileWidth) {
+function renderPolygon(context, geoms, properties, extent, style, tileWidth) {
 	const div = extent / tileWidth;
 	context.fillStyle = properties.color;
 
@@ -173,34 +173,6 @@ function renderPolygonClassified(context, geoms, properties, extent, style, tile
 				} else {
 					context.lineTo(x, y);
 				}
-			}
-		}
-
-		context.closePath();
-		context.fill("evenodd");
-	}
-}
-
-function renderPolygon(context, geoms, properties) {
-	context.fillStyle = properties.color;
-
-
-	context.beginPath();
-
-	for (let i = 0; i < geoms.length; i++) {
-		const coords = geoms[i];
-
-
-		for (let k = 0; k < coords.length; k++) {
-			if (k === 0) {
-				context.moveTo(coords[k].x, coords[k].y);
-			} else {
-				context.lineTo(coords[k].x, coords[k].y);
-			}
-
-			if (k === coords.length - 1 && coords[0].y !== coords[k].y) {
-				context.lineTo(coords[0].x, coords[0].y);
-				//console.log(coords[0].y, coords[k].y);
 			}
 		}
 
@@ -240,9 +212,8 @@ MvtImageryProvider.prototype.requestImage = async function (x, y, level, request
 
 				if (type === 3) {
 					const geom = feature.loadGeometry();
-					//renderPolygon(context, geom, feature.properties);
 					const classified = feature.classifyRings(geom);
-					renderPolygonClassified(context, classified, feature.properties, layer.extent, this.style, this._tileWidth);
+					renderPolygon(context, classified, feature.properties, layer.extent, this.style, this._tileWidth);
 				} else {
 					console.log(type);
 				}
